@@ -13,7 +13,7 @@ A simple Django-based crowdfunding web application that allows users to create p
 ## Tech Stack
 - **Backend**: Django (Python)
 - **Frontend**: HTML, CSS, Bootstrap
-- **Database**: SQLite (default, can be switched to PostgreSQL/MySQL)
+- **Database**: PostgreSQL
 - **Version Control**: Git & GitHub
 
 ## Installation & Setup
