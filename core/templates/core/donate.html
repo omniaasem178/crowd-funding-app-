@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Donate to {{ project.title }} - CrowdFund{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                        <h2 class="card-title fw-bold">Support This Project</h2>
+                        <p class="text-muted">Your contribution makes a real difference</p>
+                    </div>
+
+                    <!-- Project Info -->
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3 text-center">
+                                    {% if project.image %}
+                                        <img src="{{ project.image.url }}" 
+                                             class="rounded" 
+                                             style="width: 80px; height: 60px; object-fit: cover;" 
+                                             alt="{{ project.title }}">
+                                    {% else %}
+                                        <div class="rounded bg-secondary d-flex align-items-center justify-content-center mx-auto" 
+                                             style="width: 80px; height: 60px;">
+                                            <i class="fas fa-image fa-2x text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-9">
+                                    <h5 class="fw-bold mb-1">{{ project.title }}</h5>
+                                    <p class="text-muted mb-2">{{ project.details|truncatewords:15 }}</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                             style="width: 24px; height: 24px;">
+                                            <i class="fas fa-user fa-xs text-primary"></i>
+                                        </div>
+                                        <small class="text-muted">{{ project.owner.username }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Funding Progress -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold">Funding Progress</span>
+                            <span class="text-muted">{{ project.total_donated|floatformat:0 }} / {{ project.target|floatformat:0 }} EGP</span>
+                        </div>
+                        <small class="text-muted">
+                            {{ project.remaining_target|floatformat:0 }} EGP still needed
+                        </small>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Error:</strong>
+                            {% for err in form.non_field_errors %}
+                                {{ err }}
+                            {% endfor %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Donation Amount -->
+                        <div class="mb-4">
+                            <label for="{{ form.amount.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-coins me-2"></i>Donation Amount (EGP)
+                            </label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       class="form-control {% if form.amount.errors %}is-invalid{% endif %}" 
+                                       id="{{ form.amount.id_for_label }}"
+                                       name="{{ form.amount.name }}"
+                                       value="{{ form.amount.value|default:'' }}"
+                                       placeholder="Enter your donation amount"
+                                       min="1"
+                                       step="0.01"
+                                       required>
+                                <span class="input-group-text">EGP</span>
+                            </div>
+                            {% if form.amount.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.amount.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Minimum donation: 1 EGP. Every contribution counts!
+                            </div>
+                        </div>
+
+                        <!-- Suggested Amounts -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-lightbulb me-2"></i>Quick Amounts
+                            </label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-primary quick-amount" data-amount="10">
+                                    10 EGP
+                                </button>
+                                <button type="button" class="btn btn-outline-primary quick-amount" data-amount="25">
+                                    25 EGP
+                                </button>
+                                <button type="button" class="btn btn-outline-primary quick-amount" data-amount="50">
+                                    50 EGP
+                                </button>
+                                <button type="button" class="btn btn-outline-primary quick-amount" data-amount="100">
+                                    100 EGP
+                                </button>
+                                <button type="button" class="btn btn-outline-primary quick-amount" data-amount="250">
+                                    250 EGP
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Donation Impact -->
+                        <div class="alert alert-info border-0 mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-star text-warning me-3"></i>
+                                <div>
+                                    <strong>Your Impact:</strong> Your donation will help bring this project closer to its goal. 
+                                    Every contribution, no matter the size, makes a real difference in the creator's journey.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                                <i class="fas fa-heart me-2"></i>Complete Donation
+                            </button>
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Project
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quick amount selection
+    document.addEventListener('DOMContentLoaded', function() {
+        const quickAmountButtons = document.querySelectorAll('.quick-amount');
+        const amountInput = document.getElementById('{{ form.amount.id_for_label }}');
+        
+        quickAmountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const amount = this.getAttribute('data-amount');
+                amountInput.value = amount;
+                
+                // Update button states
+                quickAmountButtons.forEach(btn => btn.classList.remove('btn-primary'));
+                quickAmountButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-primary');
+            });
+        });
+    });
+</script>
+{% endblock %}

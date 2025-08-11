@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - CrowdFund{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="mb-3">Welcome to CrowdFund</h1>
+        <p class="text-muted mb-4">Support amazing projects and make a difference in the world</p>
+        <a href="{% url 'all_projects' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-search me-2"></i>Browse Projects
+        </a>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-lightbulb fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Discover Projects</h5>
+                    <p class="card-text">Find innovative projects that inspire you and align with your values.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-heart fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Support Creators</h5>
+                    <p class="card-text">Help bring creative ideas to life by supporting passionate creators.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Join Community</h5>
+                    <p class="card-text">Be part of a community that believes in the power of collective support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="text-center">
+            <a href="{% url 'create_project' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-plus me-2"></i>Start Your Project
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <p class="text-muted mb-3">Ready to make a difference?</p>
+            <a href="{% url 'register' %}" class="btn btn-outline-primary me-3">Get Started</a>
+            <a href="{% url 'login' %}" class="btn btn-primary">Sign In</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - CrowdFund{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success/Error Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-edit fa-3x text-primary mb-3"></i>
+                        <h2 class="card-title fw-bold">Edit Your Profile</h2>
+                        <p class="text-muted">Update your personal information and profile details</p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- User Information Section -->
+                        <div class="card border-0 bg-light mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary mb-3">
+                                    <i class="fas fa-user-circle me-2"></i>User Information
+                                </h5>
+                                
+                                <!-- Username Field -->
+                                <div class="mb-3">
+                                    <label for="{{ userform.username.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-user me-2"></i>Username
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control {% if userform.username.errors %}is-invalid{% endif %}" 
+                                           id="{{ userform.username.id_for_label }}"
+                                           name="{{ userform.username.name }}"
+                                           value="{{ userform.username.value|default:'' }}"
+                                           placeholder="Enter your username"
+                                           required>
+                                    {% if userform.username.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in userform.username.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Email Field -->
+                                <div class="mb-3">
+                                    <label for="{{ userform.email.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                    <input type="email" 
+                                           class="form-control {% if userform.email.errors %}is-invalid{% endif %}" 
+                                           id="{{ userform.email.id_for_label }}"
+                                           name="{{ userform.email.name }}"
+                                           value="{{ userform.email.value|default:'' }}"
+                                           placeholder="Enter your email address"
+                                           required>
+                                    {% if userform.email.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in userform.email.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- First Name Field -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ userform.first_name.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-id-card me-2"></i>First Name
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control {% if userform.first_name.errors %}is-invalid{% endif %}" 
+                                               id="{{ userform.first_name.id_for_label }}"
+                                               name="{{ userform.first_name.name }}"
+                                               value="{{ userform.first_name.value|default:'' }}"
+                                               placeholder="Enter your first name">
+                                        {% if userform.first_name.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in userform.first_name.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Last Name Field -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ userform.last_name.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-id-card me-2"></i>Last Name
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control {% if userform.last_name.errors %}is-invalid{% endif %}" 
+                                               id="{{ userform.last_name.id_for_label }}"
+                                               name="{{ userform.last_name.name }}"
+                                               value="{{ userform.last_name.value|default:'' }}"
+                                               placeholder="Enter your last name">
+                                        {% if userform.last_name.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in userform.last_name.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Information Section -->
+                        <div class="card border-0 bg-light mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary mb-3">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Profile Information
+                                </h5>
+                                
+                                <!-- Phone Number Field -->
+                                <div class="mb-3">
+                                    <label for="{{ profileform.phone_number.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-phone me-2"></i>Phone Number
+                                    </label>
+                                    <input type="tel" 
+                                           class="form-control {% if profileform.phone_number.errors %}is-invalid{% endif %}" 
+                                           id="{{ profileform.phone_number.id_for_label }}"
+                                           name="{{ profileform.phone_number.name }}"
+                                           value="{{ profileform.phone_number.value|default:'' }}"
+                                           placeholder="Enter your phone number">
+                                    {% if profileform.phone_number.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in profileform.phone_number.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- City Field -->
+                                <div class="mb-3">
+                                    <label for="{{ profileform.city.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-city me-2"></i>City
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control {% if profileform.city.errors %}is-invalid{% endif %}" 
+                                           id="{{ profileform.city.id_for_label }}"
+                                           name="{{ profileform.city.name }}"
+                                           value="{{ profileform.city.value|default:'' }}"
+                                           placeholder="Enter your city">
+                                    {% if profileform.city.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in profileform.city.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                        </div>
+
+                                <!-- Profile Image Field -->
+                                <div class="mb-3">
+                                    <label for="{{ profileform.image.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-camera me-2"></i>Profile Picture
+                                    </label>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <input type="file" 
+                                                   class="form-control {% if profileform.image.errors %}is-invalid{% endif %}" 
+                                                   id="{{ profileform.image.id_for_label }}"
+                                                   name="{{ profileform.image.name }}"
+                                                   accept="image/*">
+                                            {% if profileform.image.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in profileform.image.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Recommended size: 200x200 pixels. Max file size: 5MB.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            {% if profile.image %}
+                                                <img src="{{ profile.image.url }}" 
+                                                     class="rounded-circle" 
+                                                     style="width: 80px; height: 80px; object-fit: cover;" 
+                                                     alt="Current Profile Picture">
+                                            {% else %}
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" 
+                                                     style="width: 80px; height: 80px;">
+                                                    <i class="fas fa-user fa-2x text-white"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'password_change' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </a>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-info btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Profile
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

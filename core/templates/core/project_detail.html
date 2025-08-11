@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} - CrowdFund{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Project Image and Main Content -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                {% if project.image %}
+                    <img src="{{ project.image.url }}" 
+                         class="card-img-top" 
+                         alt="{{ project.title }}"
+                         style="height: 400px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                         style="height: 400px;">
+                        <i class="fas fa-image fa-4x text-muted"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body p-4">
+                    <!-- Project Owner -->
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 48px; height: 48px;">
+                            <i class="fas fa-user fa-lg text-primary"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Created by</small>
+                            <strong>{{ project.owner.username }}</strong>
+                        </div>
+                        <div class="ms-auto">
+                            {% if project.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Ended</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Project Title -->
+                    <h1 class="fw-bold mb-3">{{ project.title }}</h1>
+
+                    <!-- Project Description -->
+                    <div class="mb-4">
+                        <h5 class="fw-semibold mb-2">
+                            <i class="fas fa-align-left me-2"></i>About This Project
+                        </h5>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            {{ project.details|linebreaks }}
+                        </p>
+                    </div>
+
+                    <!-- Project Timeline -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar-plus text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Start Date</small>
+                                    <strong>{{ project.start_time|date:"F j, Y" }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar-minus text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">End Date</small>
+                                    <strong>{{ project.end_time|date:"F j, Y" }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Stats and Donation Sidebar -->
+        <div class="col-lg-4">
+            <!-- Funding Progress Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-chart-line me-2"></i>Funding Progress
+                    </h5>
+
+                    <!-- Funding Stats -->
+                    <div class="row text-center mb-4">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <div class="fw-bold text-primary fs-4">{{ project.target|floatformat:0 }}</div>
+                                <small class="text-muted">Target (EGP)</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="fw-bold text-success fs-4">{{ project.total_donated|floatformat:0 }}</div>
+                            <small class="text-muted">Raised (EGP)</small>
+                        </div>
+                    </div>
+
+                    <!-- Remaining Amount -->
+                    <div class="text-center mb-4">
+                        <div class="bg-light rounded p-3">
+                            <small class="text-muted d-block">Still Needed</small>
+                            <div class="fw-bold text-danger fs-5">{{ project.remaining_target|floatformat:0 }} EGP</div>
+                        </div>
+                    </div>
+
+                    <!-- Donation Button -->
+                    {% if project.is_active %}
+                        <div class="d-grid">
+                            <a href="{% url 'donate' project.id %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-heart me-2"></i>Support This Project
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="d-grid">
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="fas fa-clock me-2"></i>Campaign Ended
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Project Actions -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-share-alt me-2"></i>Share This Project
+                    </h6>
+                    <div class="d-flex gap-2 mb-3">
+                        <a href="#" class="btn btn-outline-primary flex-fill">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-info flex-fill">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-success flex-fill">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    
+                    {% if user == project.owner %}
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-edit me-2"></i>Edit Project
+                            </a>
+                            <a href="{% url 'delete_project' project.id %}" class="btn btn-outline-danger">
+                                <i class="fas fa-trash me-2"></i>Delete Project
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Recent Donations Section (if available) -->
+    {% if project.donation_set.all %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3">
+                            <i class="fas fa-users me-2"></i>Recent Supporters
+                        </h5>
+                        <div class="row">
+                            {% for donation in project.donation_set.all|slice:":6" %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 40px; height: 40px;">
+                                            <i class="fas fa-heart fa-sm text-success"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">{{ donation.user.username }}</div>
+                                            <small class="text-muted">{{ donation.amount }} EGP</small>
+                                        </div>
+                                        <small class="text-muted">{{ donation.created_at|timesince }} ago</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

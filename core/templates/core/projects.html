@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}All Projects - CrowdFund{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">Discover Amazing Projects</h1>
+            <p class="lead text-muted">
+                Explore innovative ideas and support creators from around the world
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_project' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Start a Project
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Join to Create
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Projects Grid -->
+    {% if projects %}
+        <div class="row g-4">
+            {% for project in projects %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card project-card h-100 border-0 shadow-sm">
+                        <!-- Project Image -->
+                        <div class="position-relative">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" 
+                                     class="card-img-top" 
+                                     alt="{{ project.title }}"
+                                     style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Project Status Badge -->
+                            <div class="position-absolute top-0 end-0 m-3">
+                                {% if project.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Ended</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Project Owner -->
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                     style="width: 32px; height: 32px;">
+                                    <i class="fas fa-user fa-sm text-primary"></i>
+                                </div>
+                                <small class="text-muted">{{ project.owner.username }}</small>
+                            </div>
+
+                            <!-- Project Title -->
+                            <h5 class="card-title fw-bold mb-2">
+                                <a href="{% url 'project_detail' project.id %}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ project.title }}
+                                </a>
+                            </h5>
+
+                            <!-- Project Description -->
+                            <p class="card-text text-muted flex-grow-1">
+                                {{ project.details|truncatewords:20 }}
+                            </p>
+
+                            <!-- Project Stats -->
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <div class="fw-bold text-primary">{{ project.target|floatformat:0 }}</div>
+                                        <small class="text-muted">Target (EGP)</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-bold text-success">{{ project.remaining_target|floatformat:0 }}</div>
+                                    <small class="text-muted">Raised (EGP)</small>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'project_detail' project.id %}" 
+                                   class="btn btn-outline-primary flex-fill">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                                {% if project.is_active %}
+                                    <a href="{% url 'donate' project.id %}" 
+                                       class="btn btn-primary flex-fill">
+                                        <i class="fas fa-heart me-1"></i>Donate
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination (if needed) -->
+        {% if is_paginated %}
+            <nav aria-label="Projects pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" 
+                 style="width: 120px; height: 120px;">
+                <i class="fas fa-folder-open fa-3x text-muted"></i>
+            </div>
+            <h3 class="fw-bold mb-3">No Projects Found</h3>
+            <p class="text-muted mb-4">
+                There are currently no projects available. Be the first to create an amazing project!
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_project' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Create Your First Project
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Join to Create Projects
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

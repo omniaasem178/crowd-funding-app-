@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - CrowdFund{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 slide-in-left">
+                <h1 class="display-4 fw-bold mb-4">
+                    Support an Idea. <span class="text-warning">Change the World.</span>
+                </h1>
+                <p class="lead mb-4">
+                    Bring powerful ideas to life with your contribution. Join thousands of supporters 
+                    who are making a difference in the world through crowdfunding.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="{% url 'all_projects' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-search me-2"></i>Explore Projects
+                    </a>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Join CrowdFund
+                        </a>
+                    {% else %}
+                        <a href="{% url 'create_project' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-plus me-2"></i>Start a Project
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center slide-in-right">
+                <div class="position-relative">
+                    <div class="bg-white bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-lg" 
+                         style="width: 300px; height: 300px;">
+                        <i class="fas fa-leaf fa-6x text-white"></i>
+                    </div>
+                    <div class="position-absolute top-0 start-0 bg-warning rounded-circle d-flex align-items-center justify-content-center shadow" 
+                         style="width: 80px; height: 80px; transform: translate(-20px, -20px);">
+                        <i class="fas fa-lightbulb fa-2x text-dark"></i>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 bg-success rounded-circle d-flex align-items-center justify-content-center shadow" 
+                         style="width: 60px; height: 60px; transform: translate(20px, 20px);">
+                        <i class="fas fa-users fa-lg text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3">Why Choose CrowdFund?</h2>
+                <p class="text-muted lead">
+                    We provide the platform for innovators to connect with supporters worldwide
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 fade-in">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-rocket fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Launch Your Ideas</h5>
+                        <p class="card-text text-muted">
+                            Turn your innovative ideas into reality with the support of our global community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 fade-in">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-shield-alt fa-2x text-success"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Secure & Transparent</h5>
+                        <p class="card-text text-muted">
+                            Your contributions are safe and transparent with our secure payment system.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 fade-in">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-globe fa-2x text-warning"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Global Reach</h5>
+                        <p class="card-text text-muted">
+                            Connect with supporters from around the world and expand your project's impact.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why This Project Section
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 fade-in">
+                <h2 class="fw-bold mb-4">Why I'm Using This Project</h2>
+                <p class="lead mb-4">
+                    This crowdfunding platform represents the perfect blend of technology and social impact. 
+                    It's designed to empower individuals and organizations to bring their innovative ideas to life 
+                    through community support and transparent funding.
+                </p>
+                <p class="mb-4">
+                    The platform addresses real-world challenges by providing a secure, user-friendly interface 
+                    that connects creators with supporters. It's built with modern web technologies and follows 
+                    best practices for user experience, making it accessible to people from all walks of life.
+                </p>
+                <div class="d-flex gap-3">
+                    <div class="text-center">
+                        <div class="h4 text-primary mb-1">1000+</div>
+                        <small class="text-muted">Projects Funded</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="h4 text-success mb-1">50K+</div>
+                        <small class="text-muted">Active Supporters</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="h4 text-warning mb-1">$2M+</div>
+                        <small class="text-muted">Total Raised</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center fade-in">
+                <div class="position-relative">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-lg" 
+                         style="width: 400px; height: 400px;">
+                        <i class="fas fa-chart-line fa-8x text-primary"></i>
+                    </div>
+                    <div class="position-absolute top-0 start-0 bg-success rounded-circle d-flex align-items-center justify-content-center shadow" 
+                         style="width: 100px; height: 100px; transform: translate(-30px, -30px);">
+                        <i class="fas fa-check fa-3x text-white"></i>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 bg-warning rounded-circle d-flex align-items-center justify-content-center shadow" 
+                         style="width: 80px; height: 80px; transform: translate(30px, 30px);">
+                        <i class="fas fa-star fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<!-- Call to Action -->
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-4">Ready to Make a Difference?</h2>
+                <p class="lead mb-4">
+                    Join our community of innovators and supporters. Whether you have an idea to share 
+                    or want to support meaningful projects, your journey starts here.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Get Started Today
+                        </a>
+                        <a href="{% url 'all_projects' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-eye me-2"></i>Browse Projects
+                        </a>
+                    {% else %}
+                        <a href="{% url 'create_project' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Create New Project
+                        </a>
+                        <a href="{% url 'all_projects' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-search me-2"></i>Discover More
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
